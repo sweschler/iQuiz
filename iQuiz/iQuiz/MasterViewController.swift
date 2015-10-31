@@ -11,8 +11,7 @@ import UIKit
 class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
-    var objects = ["Mathematics", "Marvel Super Heroes", "Science"]
-
+    var objects = [("Mathematics", "Come learn some math tricks!"), ("Marvel Super Heroes", "Who's your favorite super hero?"), ("Science", "Find out about the coolest science experiments!")]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +49,7 @@ class MasterViewController: UITableViewController {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let object = objects[indexPath.row]
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
+                controller.detailItem = object[indexPath.row].0
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -68,11 +67,16 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
+        let tableViewIdentifier = "Cell"
+        var cell = tableView.dequeueReusableCellWithIdentifier(tableViewIdentifier) as UITableViewViewCell?
+        if cell == nil {
+            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: tableViewIdentifier)
+        }
         let object = objects[indexPath.row]
-        cell.textLabel!.text = object
-        return cell
+        cell!.textLabel!.text = object.0
+        cell!.detailTextLabel!.text = object.1
+        return cell!
+        
     }
 }
 
